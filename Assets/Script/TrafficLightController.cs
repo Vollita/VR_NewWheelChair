@@ -3,32 +3,24 @@ using System.Collections;
 
 public class TrafficLightController : MonoBehaviour
 {
-    public Renderer lightRenderer;
+    public Renderer redBox;
+    public Renderer yellowBox;
+    public Renderer greenBox;
 
-    public Material redMaterial;
-    public Material yellowMaterial;
-    public Material greenMaterial;
-
-    public Light pointLight;  // 挂一个Light组件
+    public Material matRed;
+    public Material matYellow;
+    public Material matGreen;
+    public Material matOff;
 
     public float redDuration = 5f;
-    public float yellowDuration = 2f;
     public float greenDuration = 5f;
-
-    public float lightIntensity = 2f;  // 光强度，统一设置，也可以分别写多个
+    public float yellowDuration = 2f;
 
     private enum LightState { Red, Green, Yellow }
-    private LightState currentState = LightState.Green;
+    private LightState currentState = LightState.Red;
 
     private void Start()
     {
-        if (lightRenderer == null)
-            lightRenderer = GetComponent<Renderer>();
-
-        if (pointLight == null)
-            pointLight = GetComponentInChildren<Light>();
-
-        SetLightState(currentState);
         StartCoroutine(CycleLights());
     }
 
@@ -61,34 +53,8 @@ public class TrafficLightController : MonoBehaviour
 
     private void SetLightState(LightState state)
     {
-        currentState = state;
-
-        switch (state)
-        {
-            case LightState.Red:
-                lightRenderer.material = redMaterial;
-                if (pointLight != null)
-                {
-                    pointLight.color = Color.red;
-                    pointLight.intensity = lightIntensity;
-                }
-                break;
-            case LightState.Yellow:
-                lightRenderer.material = yellowMaterial;
-                if (pointLight != null)
-                {
-                    pointLight.color = Color.yellow;
-                    pointLight.intensity = lightIntensity;
-                }
-                break;
-            case LightState.Green:
-                lightRenderer.material = greenMaterial;
-                if (pointLight != null)
-                {
-                    pointLight.color = Color.green;
-                    pointLight.intensity = lightIntensity;
-                }
-                break;
-        }
+        redBox.material = (state == LightState.Red) ? matRed : matOff;
+        yellowBox.material = (state == LightState.Yellow) ? matYellow : matOff;
+        greenBox.material = (state == LightState.Green) ? matGreen : matOff;
     }
 }
