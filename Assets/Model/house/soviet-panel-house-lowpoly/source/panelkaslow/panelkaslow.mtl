@@ -1,0 +1,24 @@
+# Blender 4.3.1 MTL File: 'panelkalow.blend'
+# www.blender.org
+
+newmtl Home
+Ns 69.504128
+Ka 0.222727 0.222727 0.222727
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.200000
+d 1.000000
+illum 3
+map_Kd C:/page.png
+map_Bump -bm 0.770000 C:/page_n.png
+
+newmtl Roof
+Ns 105.404121
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd C:/o_5189.jpg
+map_Bump -bm 1.000000 C:/o_5189_n.png
