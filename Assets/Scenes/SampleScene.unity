@@ -2115,6 +2115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850776558}
+  - component: {fileID: 850776559}
   m_Layer: 0
   m_Name: Camera Offset
   m_TagString: Untagged
@@ -2140,6 +2141,22 @@ Transform:
   - {fileID: 1737573450}
   m_Father: {fileID: 1609263359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850776559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850776557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3ce3b76c36d3ce46b6c67dc39b68d00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 100
+  minVerticalAngle: -90
+  maxVerticalAngle: 90
+  lockCursor: 1
 --- !u!1 &871954609
 GameObject:
   m_ObjectHideFlags: 0
@@ -2902,16 +2919,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c1dd0ba93257c468f0d9b91ddb4fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightRenderer: {fileID: 0}
-  redMaterial: {fileID: 2100000, guid: 47439000e6913b84fbb9f57f8cddfea6, type: 2}
-  yellowMaterial: {fileID: 2100000, guid: 7d4a720aebeeb20448065830b0177561, type: 2}
-  greenMaterial: {fileID: 2100000, guid: afc8ed2aac5dda74fae946e1c9bba867, type: 2}
-  pointLight: {fileID: 0}
-  redDuration: 5
-  yellowDuration: 2
-  greenDuration: 5
-  lightIntensity: 2
-  currentState: 1
 --- !u!65 &1013117885
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3256,6 +3263,7 @@ GameObject:
   - component: {fileID: 1221587442}
   - component: {fileID: 1221587441}
   - component: {fileID: 1221587440}
+  - component: {fileID: 1221587443}
   m_Layer: 0
   m_Name: WheelChair_Player
   m_TagString: Player
@@ -3336,7 +3344,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221587436}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3a9b3c5fea2a0041ae086fad2717851, type: 3}
   m_Name: 
@@ -3379,6 +3387,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathUI: {fileID: 2084097382}
   targetTag: Car
+--- !u!114 &1221587443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221587436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbba805fcaae7674d918ee0f88eb7811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheelL: {fileID: 900636330}
+  wheelR: {fileID: 39411616}
+  meshL: {fileID: 7492693619413702606}
+  meshR: {fileID: 2096419245133938534}
+  maxMotorTorque: 300
+  brakeTorque: 500
+  maxSpeed: 4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundRayLength: 1
 --- !u!1 &1234344919
 GameObject:
   m_ObjectHideFlags: 0
