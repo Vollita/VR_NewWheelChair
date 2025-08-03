@@ -5,15 +5,25 @@ public class DeathHandler : MonoBehaviour
 {
     private bool isDead = false;
 
-    public GameObject deathUI;       // Inspector中挂死亡UI
-    public string targetTag = "Car"; // Inspector中可配置撞到什么Tag就判定死亡
+    public GameObject deathUI;               // Inspector中挂死亡UI
+    public string[] deathTags = { "Car", "Door" }; // 可配置多个死亡触发Tag
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!isDead && collision.gameObject.CompareTag(targetTag))
+        if (!isDead && IsDeadlyTag(collision.gameObject.tag))
         {
             Die();
         }
+    }
+
+    bool IsDeadlyTag(string tag)
+    {
+        foreach (string t in deathTags)
+        {
+            if (tag == t)
+                return true;
+        }
+        return false;
     }
 
     public void Die()

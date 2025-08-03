@@ -468,12 +468,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d52ea6e2592ec4f9b7baa723c3ceac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detectRadius: 1
+  player: {fileID: 378082656}
   teleportTarget: {fileID: 391327895}
-  blackScreenDuration: 2
-  playerTag: Player
-  blackScreenCanvas: {fileID: 0}
-  blackScreenImage: {fileID: 0}
-  showDebugInfo: 1
 --- !u!65 &194388064
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -554,7 +551,7 @@ Transform:
   m_GameObject: {fileID: 194388062}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.57, y: -0.82, z: -8.13}
+  m_LocalPosition: {x: -2.57, y: -0.75, z: -8.13}
   m_LocalScale: {x: 3, y: 0.1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -777,8 +774,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f826f4902a890f84e986c48e1fb0590e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathUI: {fileID: 0}
-  targetTag: Car
+  deathUI: {fileID: 2069451066}
+  deathTags:
+  - Car
+  - Door
 --- !u!65 &378082654
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -836,7 +835,7 @@ Transform:
   m_GameObject: {fileID: 378082649}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.64, y: -0.5757889, z: -0.6584037}
+  m_LocalPosition: {x: 1.64, y: -0.702, z: -0.6584037}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1501,7 +1500,7 @@ GameObject:
   - component: {fileID: 1142194423}
   m_Layer: 0
   m_Name: door2
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2628,7 +2627,7 @@ GameObject:
   - component: {fileID: 1303567100}
   m_Layer: 0
   m_Name: door1
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2925,6 +2924,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1385760324}
   m_Mesh: {fileID: -7310812993679833289, guid: 59ef0442cad4e78439e390f58b7b9e16, type: 3}
+--- !u!1 &1409419534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1409419536}
+  - component: {fileID: 1409419535}
+  m_Layer: 0
+  m_Name: diantichuansong
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1409419535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409419534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d52ea6e2592ec4f9b7baa723c3ceac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRadius: 1
+  player: {fileID: 0}
+  teleportTarget: {fileID: 391327895}
+--- !u!4 &1409419536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409419534}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.5699997, y: -0.17, z: -7.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1430808098
 GameObject:
   m_ObjectHideFlags: 0
@@ -4374,7 +4420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4553,3 +4599,4 @@ SceneRoots:
   - {fileID: 194388067}
   - {fileID: 391327895}
   - {fileID: 563602403}
+  - {fileID: 1409419536}
