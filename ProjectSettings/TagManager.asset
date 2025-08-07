@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Car
   - Door
+  - Ground
   layers:
   - Default
   - TransparentFX
