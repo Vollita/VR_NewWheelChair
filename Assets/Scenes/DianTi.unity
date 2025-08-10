@@ -471,7 +471,8 @@ MonoBehaviour:
   teleportTarget: {fileID: 391327895}
   lookTarget: {fileID: 1644961125}
   teleportDelay: 3
-  blackScreenTime: 1
+  blackScreenTime: 0.5
+  doorOpenDelay: 1
 --- !u!65 &194388064
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2958,6 +2959,7 @@ MonoBehaviour:
   lookTarget: {fileID: 0}
   teleportDelay: 2
   blackScreenTime: 1
+  doorOpenDelay: 0.1
 --- !u!4 &1409419536
 Transform:
   m_ObjectHideFlags: 0

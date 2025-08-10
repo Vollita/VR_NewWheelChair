@@ -8,6 +8,7 @@ public class ElevatorTrigger : MonoBehaviour
     public Transform lookTarget;                // 传送后面朝的目标
     public float teleportDelay = 2f;            // 传送延时（秒）
     public float blackScreenTime = 1f;          // 黑屏持续时间
+    public float doorOpenDelay = 0.1f;          // 开门延时（秒）
     private bool hasTeleported = false;
     private bool isCountingDown = false;
     private Image blackScreenImage;
@@ -41,64 +42,16 @@ public class ElevatorTrigger : MonoBehaviour
             {
                 isCountingDown = true;
                 ShowBlackScreen();
-                Invoke(nameof(TeleportPlayer), teleportDelay); // 延时传送
+                Invoke(nameof(HideBlackScreen), blackScreenTime); // 直接延时到黑屏结束并传送
                 break;
             }
         }
     }
 
-    void TeleportPlayer()
+    void StartBlackScreen()
     {
-        if (hasTeleported) return;
-
-        // 传送玩家 - 确保传送到正确的位置
-        if (player != null && teleportTarget != null)
-        {
-            // 如果玩家有CharacterController，需要特殊处理
-            CharacterController cc = player.GetComponent<CharacterController>();
-            if (cc != null)
-            {
-                cc.enabled = false;
-                player.position = teleportTarget.position;
-                cc.enabled = true;
-            }
-            else
-            {
-                player.position = teleportTarget.position;
-            }
-
-            // 设置面朝方向
-            if (lookTarget != null)
-            {
-                Vector3 direction = (lookTarget.position - player.position);
-                direction.y = 0; // 保持水平方向
-                if (direction.sqrMagnitude > 0.001f) // 使用sqrMagnitude避免开方运算，并确保方向不为零
-                {
-                    player.rotation = Quaternion.LookRotation(direction.normalized);
-                }
-            }
-
-            hasTeleported = true;
-            Debug.Log("玩家被传送并调整朝向");
-
-            // 打开所有带有 ElevatorArrivalDoor 脚本且Tag为 "arriveDoor" 的门
-            GameObject[] doors = GameObject.FindGameObjectsWithTag("arriveDoor");
-            foreach (var doorObj in doors)
-            {
-                ElevatorArrivalDoor doorScript = doorObj.GetComponent<ElevatorArrivalDoor>();
-                if (doorScript != null)
-                {
-                    doorScript.OpenDoor();
-                }
-            }
-
-            Invoke(nameof(HideBlackScreen), blackScreenTime); // 黑屏一段时间后恢复
-        }
-        else
-        {
-            Debug.LogError("传送失败：player 或 teleportTarget 为空");
-            HideBlackScreen(); // 即使失败也要隐藏黑屏
-        }
+        ShowBlackScreen();
+        Invoke(nameof(HideBlackScreen), blackScreenTime); // 黑屏一段时间后恢复并传送
     }
 
     void CreateBlackScreen()
@@ -137,6 +90,58 @@ public class ElevatorTrigger : MonoBehaviour
     {
         if (blackScreenImage != null)
             blackScreenImage.color = new Color(0, 0, 0, 0);
+
+        // 传送玩家 - 确保传送到正确的位置
+        if (player != null && teleportTarget != null)
+        {
+            // 如果玩家有CharacterController，需要特殊处理
+            CharacterController cc = player.GetComponent<CharacterController>();
+            if (cc != null)
+            {
+                cc.enabled = false;
+                player.position = teleportTarget.position;
+                cc.enabled = true;
+            }
+            else
+            {
+                player.position = teleportTarget.position;
+            }
+
+            // 设置面朝方向
+            if (lookTarget != null)
+            {
+                Vector3 direction = (lookTarget.position - player.position);
+                direction.y = 0; // 保持水平方向
+                if (direction.sqrMagnitude > 0.001f) // 使用sqrMagnitude避免开方运算，并确保方向不为零
+                {
+                    player.rotation = Quaternion.LookRotation(direction.normalized);
+                }
+            }
+
+            hasTeleported = true;
+            Debug.Log("玩家被传送并调整朝向");
+        }
+        else
+        {
+            Debug.LogError("传送失败：player 或 teleportTarget 为空");
+        }
+
+        // 微小延时后开门
+        Invoke(nameof(OpenDoors), doorOpenDelay);
+    }
+
+    void OpenDoors()
+    {
+        // 打开所有带有 ElevatorArrivalDoor 脚本且Tag为 "arriveDoor" 的门
+        GameObject[] doors = GameObject.FindGameObjectsWithTag("arriveDoor");
+        foreach (var doorObj in doors)
+        {
+            ElevatorArrivalDoor doorScript = doorObj.GetComponent<ElevatorArrivalDoor>();
+            if (doorScript != null)
+            {
+                doorScript.OpenDoor();
+            }
+        }
     }
 
     void OnDrawGizmosSelected()
