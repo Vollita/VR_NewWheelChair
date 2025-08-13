@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
-public class WASDWheel: MonoBehaviour
+public class WASDWheel : MonoBehaviour
 {
     [Header("Wheel Colliders")]
     public WheelCollider wheelL;
@@ -17,6 +17,10 @@ public class WASDWheel: MonoBehaviour
     public float brakeTorque = 500f;      // 制动力矩
     public float maxSpeed = 5f;           // 最大速度限制
 
+    [Header("Slope Settings")]
+    public float slopeSlideForce = 5f;    // 斜坡下滑力大小
+    public LayerMask slopeLayer;         // 斜坡层
+
     [Header("Ground Detection")]
     public LayerMask groundLayer;
     public float groundRayLength = 1.0f;
@@ -24,6 +28,8 @@ public class WASDWheel: MonoBehaviour
     private float moveInput;
     private float turnInput;
     private Rigidbody rb;
+    private bool isOnSlope = false;
+    private Vector3 slopeNormal;
 
     void Awake()
     {
@@ -60,6 +66,9 @@ public class WASDWheel: MonoBehaviour
         // WASD控制
         moveInput = Input.GetAxis("Vertical");    // W/S for forward/backward
         turnInput = Input.GetAxis("Horizontal");  // A/D for left/right
+
+        // 检测是否在斜坡上
+        CheckSlope();
     }
 
     void FixedUpdate()
@@ -68,6 +77,35 @@ public class WASDWheel: MonoBehaviour
         UpdateWheelVisual(wheelL, meshL);
         UpdateWheelVisual(wheelR, meshR);
         ClampMaxSpeed();
+
+        // 如果在斜坡上且没有输入，施加下滑力
+        if (isOnSlope && Mathf.Approximately(moveInput, 0f))
+        {
+            ApplySlopeSlideForce();
+        }
+    }
+
+    private void CheckSlope()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, groundRayLength, slopeLayer))
+        {
+            isOnSlope = true;
+            slopeNormal = hit.normal;
+        }
+        else
+        {
+            isOnSlope = false;
+        }
+    }
+
+    private void ApplySlopeSlideForce()
+    {
+        // 计算斜坡方向（斜坡法线的垂直方向）
+        Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, slopeNormal).normalized;
+
+        // 施加下滑力
+        rb.AddForce(slopeDirection * slopeSlideForce, ForceMode.Force);
     }
 
     private void ApplyDifferentialDrive()
@@ -80,7 +118,7 @@ public class WASDWheel: MonoBehaviour
         wheelR.motorTorque = rightTorque;
 
         bool isIdle = Mathf.Approximately(moveInput, 0f) && Mathf.Approximately(turnInput, 0f);
-        float currentBrake = isIdle ? brakeTorque : 0f;
+        float currentBrake = isIdle ? (isOnSlope ? 0f : brakeTorque) : 0f; // 在斜坡上时不刹车
 
         wheelL.brakeTorque = currentBrake;
         wheelR.brakeTorque = currentBrake;
