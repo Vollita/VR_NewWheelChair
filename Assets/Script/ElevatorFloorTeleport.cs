@@ -1,12 +1,31 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 public class ElevatorTrigger : MonoBehaviour
 {
     public float detectRadius = 1f;             // 探测半径
     public Transform player;                    // 手动指定玩家物体
     public Transform teleportTarget;            // 传送目的地
-
+    public Transform lookTarget;                // 传送后面朝的目标
+    public float teleportDelay = 2f;            // 传送延时（秒）
+    public float blackScreenTime = 1f;          // 黑屏持续时间
+    public float doorOpenDelay = 0.1f;          // 开门延时（秒）
     private bool hasTeleported = false;
+    private bool isCountingDown = false;
+    private Image blackScreenImage;
+    private Canvas canvas;
+
+    void Start()
+    {
+        CreateBlackScreen();
+
+        // 如果没有手动指定玩家，尝试自动查找
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
+        }
+    }
 
     void Update()
     {
@@ -19,25 +38,122 @@ public class ElevatorTrigger : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            if (hit.transform == player)
+            if (hit.transform == player && !isCountingDown)
             {
-                TeleportPlayer();
+                isCountingDown = true;
+                ShowBlackScreen();
+                Invoke(nameof(HideBlackScreen), blackScreenTime); // 直接延时到黑屏结束并传送
                 break;
             }
         }
     }
 
-    void TeleportPlayer()
+    void StartBlackScreen()
     {
-        player.position = teleportTarget.position;
-        hasTeleported = true;
-        Debug.Log("玩家被传送");
+        ShowBlackScreen();
+        Invoke(nameof(HideBlackScreen), blackScreenTime); // 黑屏一段时间后恢复并传送
+    }
+
+    void CreateBlackScreen()
+    {
+        GameObject canvasObj = new GameObject("AutoCanvas");
+        canvas = canvasObj.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 999;
+
+        // 添加CanvasScaler确保在不同分辨率下正常工作
+        CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+
+        GameObject imgObj = new GameObject("BlackScreen");
+        imgObj.transform.SetParent(canvasObj.transform, false);
+        blackScreenImage = imgObj.AddComponent<Image>();
+        blackScreenImage.color = new Color(0, 0, 0, 0); // 初始透明
+
+        RectTransform rect = blackScreenImage.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        // 确保Canvas不会被意外销毁
+        DontDestroyOnLoad(canvasObj);
+    }
+
+    void ShowBlackScreen()
+    {
+        if (blackScreenImage != null)
+            blackScreenImage.color = Color.black;
+    }
+
+    void HideBlackScreen()
+    {
+        if (blackScreenImage != null)
+            blackScreenImage.color = new Color(0, 0, 0, 0);
+
+        // 传送玩家 - 确保传送到正确的位置
+        if (player != null && teleportTarget != null)
+        {
+            // 如果玩家有CharacterController，需要特殊处理
+            CharacterController cc = player.GetComponent<CharacterController>();
+            if (cc != null)
+            {
+                cc.enabled = false;
+                player.position = teleportTarget.position;
+                cc.enabled = true;
+            }
+            else
+            {
+                player.position = teleportTarget.position;
+            }
+
+            // 设置面朝方向
+            if (lookTarget != null)
+            {
+                Vector3 direction = (lookTarget.position - player.position);
+                direction.y = 0; // 保持水平方向
+                if (direction.sqrMagnitude > 0.001f) // 使用sqrMagnitude避免开方运算，并确保方向不为零
+                {
+                    player.rotation = Quaternion.LookRotation(direction.normalized);
+                }
+            }
+
+            hasTeleported = true;
+            Debug.Log("玩家被传送并调整朝向");
+        }
+        else
+        {
+            Debug.LogError("传送失败：player 或 teleportTarget 为空");
+        }
+
+        // 微小延时后开门
+        Invoke(nameof(OpenDoors), doorOpenDelay);
+    }
+
+    void OpenDoors()
+    {
+        // 打开所有带有 ElevatorArrivalDoor 脚本且Tag为 "arriveDoor" 的门
+        GameObject[] doors = GameObject.FindGameObjectsWithTag("arriveDoor");
+        foreach (var doorObj in doors)
+        {
+            ElevatorArrivalDoor doorScript = doorObj.GetComponent<ElevatorArrivalDoor>();
+            if (doorScript != null)
+            {
+                doorScript.OpenDoor();
+            }
+        }
     }
 
     void OnDrawGizmosSelected()
     {
-        // 仅在Scene视图中显示检测范围
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position + Vector3.up * 1f, detectRadius);
+    }
+
+    void OnDestroy()
+    {
+        // 清理资源
+        if (canvas != null)
+            DestroyImmediate(canvas.gameObject);
     }
 }
