@@ -4,13 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Car
-  - Door
-<<<<<<< HEAD
-  - Ground
-=======
   - arriveDoor
->>>>>>> 8f04578c900179e49a3b9884750ecbad062a84d1
+  - Door
+  - Wheel
   layers:
   - Default
   - TransparentFX
@@ -18,8 +14,8 @@ TagManager:
   - 
   - Water
   - UI
-  - Ground
-  - Slope
+  - 
+  - 
   - 
   - 
   - 

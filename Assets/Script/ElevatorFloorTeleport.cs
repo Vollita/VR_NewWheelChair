@@ -36,15 +36,26 @@ public class ElevatorTrigger : MonoBehaviour
         Vector3 center = transform.position + Vector3.up * 1f;
         Collider[] hits = Physics.OverlapSphere(center, detectRadius);
 
+        bool playerInRange = false;
         foreach (var hit in hits)
         {
-            if (hit.transform == player && !isCountingDown)
+            if (hit.transform == player)
             {
-                isCountingDown = true;
-                ShowBlackScreen();
-                Invoke(nameof(HideBlackScreen), blackScreenTime); // 直接延时到黑屏结束并传送
+                playerInRange = true;
+                if (!isCountingDown)
+                {
+                    isCountingDown = true;
+                    ShowBlackScreen();
+                    Invoke(nameof(HideBlackScreen), blackScreenTime); // 直接延时到黑屏结束并传送
+                }
                 break;
             }
+        }
+
+        // 如果玩家不在范围内，重置计数标志（但不影响正在进行的传送）
+        if (!playerInRange)
+        {
+            isCountingDown = false;
         }
     }
 
