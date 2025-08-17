@@ -3104,7 +3104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91da41fe4e350d6408f2160cea5a309a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  climbSpeed: 50
+  climbSpeed: 1.5
   movementDrag: 0.5
   showDebugInfo: 1
 --- !u!65 &1601720567
