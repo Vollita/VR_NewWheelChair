@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 306886534}
   - component: {fileID: 306886533}
   m_Layer: 7
-  m_Name: Plane (3)
+  m_Name: slope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4587,7 +4587,7 @@ PrefabInstance:
     - target: {fileID: 433300897609574230, guid: 04c4fd45a526fdc4bbb9f5fa8157d583,
         type: 3}
       propertyPath: m_Name
-      value: WheelChair_Player
+      value: WheelChair_Player2
       objectReference: {fileID: 0}
     - target: {fileID: 4269087746913507167, guid: 04c4fd45a526fdc4bbb9f5fa8157d583,
         type: 3}
@@ -4637,6 +4637,16 @@ PrefabInstance:
     - target: {fileID: 4269087746913507167, guid: 04c4fd45a526fdc4bbb9f5fa8157d583,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5453972204289376747, guid: 04c4fd45a526fdc4bbb9f5fa8157d583,
+        type: 3}
+      propertyPath: slopeLayer.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5453972204289376747, guid: 04c4fd45a526fdc4bbb9f5fa8157d583,
+        type: 3}
+      propertyPath: groundLayer.m_Bits
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
