@@ -11,6 +11,33 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NextScene.unity
     guid: fd7e2e17680753243bf273311c717ed7
+  - enabled: 1
+    path: Assets/Scenes/1.unity
+    guid: c1b891576fb2f9a418ddd9b905d4c785
+  - enabled: 1
+    path: Assets/Scenes/2.unity
+    guid: 7014b2e1fc50c3d42a8f4e986d5e7544
+  - enabled: 1
+    path: Assets/Scenes/3.unity
+    guid: 1f90d889a523dc64aa8f5ad0439f6471
+  - enabled: 1
+    path: Assets/Scenes/4.unity
+    guid: c15e17b5d6dc36b4cb4466bf3f1a91d2
+  - enabled: 1
+    path: Assets/Scenes/5.unity
+    guid: 14fae1d284077f94083a68f535f235e2
+  - enabled: 1
+    path: Assets/Scenes/7.unity
+    guid: 53322957b3b550945a43ee8c66e375d6
+  - enabled: 1
+    path: Assets/Scenes/10.unity
+    guid: 87e3bb85c4697a5459ae3919b163ddf4
+  - enabled: 1
+    path: Assets/Scenes/11.unity
+    guid: 003d10af174f8194db1734b5143c3380
+  - enabled: 1
+    path: Assets/Scenes/12.unity
+    guid: d543e9445848cbe428bbe58bfbf28597
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 0a8b51ce7d4667949916fa11e0b9cf83,
       type: 2}
