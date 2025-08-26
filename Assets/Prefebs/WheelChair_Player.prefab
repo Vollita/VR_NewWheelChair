@@ -162,10 +162,10 @@ MonoBehaviour:
   slopeSlideForce: 300
   slopeLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   groundRayLength: 1
 --- !u!1 &1520966268784218393
 GameObject:
