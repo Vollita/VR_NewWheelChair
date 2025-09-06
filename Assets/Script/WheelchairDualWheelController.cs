@@ -18,6 +18,10 @@ public class WheelchairDualWheelController : MonoBehaviour
     public float brakeTorque = 500f;      // 制动力矩
     public float maxSpeed = 5f;           // 最大速度限制
 
+    [Header("Slope Settings")]
+    public float slopeSlideForce = 5f;    // 斜坡下滑力大小
+    public LayerMask slopeLayer;         // 斜坡层
+
     [Header("Ground Detection")]
     public LayerMask groundLayer;
     public float groundRayLength = 1.0f;
@@ -30,6 +34,10 @@ public class WheelchairDualWheelController : MonoBehaviour
     private float turnInput;
 
     private Rigidbody rb;
+
+    // 斜坡检测
+    private bool isOnSlope = false;
+    private Vector3 slopeNormal;
 
     void Awake()
     {
@@ -45,7 +53,7 @@ public class WheelchairDualWheelController : MonoBehaviour
         inputDevice = InputDevices.GetDeviceAtXRNode(inputNode);
         StartCoroutine(AlignToGround());
 
-        // 可选：提高轮子摩擦力（如果需要爬坡时加上）
+        // 提高轮胎摩擦力
         var sidewaysFriction = wheelL.sidewaysFriction;
         sidewaysFriction.extremumValue = 1.5f;
         sidewaysFriction.asymptoteValue = 1.2f;
@@ -78,6 +86,9 @@ public class WheelchairDualWheelController : MonoBehaviour
             moveInput = 0f;
             turnInput = 0f;
         }
+
+        // 检测斜坡
+        CheckSlope();
     }
 
     void FixedUpdate()
@@ -86,11 +97,39 @@ public class WheelchairDualWheelController : MonoBehaviour
         UpdateWheelVisual(wheelL, meshL);
         UpdateWheelVisual(wheelR, meshR);
         ClampMaxSpeed();
+
+        // 如果在斜坡上且没有输入，施加下滑力
+        if (isOnSlope && Mathf.Approximately(moveInput, 0f))
+        {
+            ApplySlopeSlideForce();
+        }
+    }
+
+    private void CheckSlope()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, groundRayLength, slopeLayer))
+        {
+            isOnSlope = true;
+            slopeNormal = hit.normal;
+        }
+        else
+        {
+            isOnSlope = false;
+        }
+    }
+
+    private void ApplySlopeSlideForce()
+    {
+        // 计算斜坡方向（法线的垂直投影）
+        Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, slopeNormal).normalized;
+
+        // 施加下滑力
+        rb.AddForce(slopeDirection * slopeSlideForce, ForceMode.Force);
     }
 
     private void ApplyDifferentialDrive()
     {
-        // ✅ 修复转向方向：向左推动手柄会左转
         float leftTorque = (moveInput + turnInput) * maxMotorTorque;
         float rightTorque = (moveInput - turnInput) * maxMotorTorque;
 
@@ -98,7 +137,10 @@ public class WheelchairDualWheelController : MonoBehaviour
         wheelR.motorTorque = rightTorque;
 
         bool isIdle = Mathf.Approximately(moveInput, 0f) && Mathf.Approximately(turnInput, 0f);
-        float currentBrake = isIdle ? brakeTorque : 0f;
+
+        // 平地无输入 → 刹车
+        // 斜坡无输入 → 不刹车
+        float currentBrake = isIdle ? (isOnSlope ? 0f : brakeTorque) : 0f;
 
         wheelL.brakeTorque = currentBrake;
         wheelR.brakeTorque = currentBrake;
@@ -128,7 +170,7 @@ public class WheelchairDualWheelController : MonoBehaviour
 
     private IEnumerator AlignToGround()
     {
-        yield return null; // 等一帧让场景初始化
+        yield return null;
 
         RaycastHit hit;
         Vector3 origin = transform.position + Vector3.up * 0.5f;
@@ -138,8 +180,8 @@ public class WheelchairDualWheelController : MonoBehaviour
             transform.position = hit.point + Vector3.up * 0.1f;
         }
 
-        yield return new WaitForSeconds(0.05f); // 稍微等几帧确保碰撞稳定
-        rb.useGravity = true; // 启用重力
+        yield return new WaitForSeconds(0.05f);
+        rb.useGravity = true;
     }
 
     public bool IsGrounded()
