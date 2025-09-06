@@ -1637,10 +1637,6 @@ MonoBehaviour:
   maxMotorTorque: 150
   brakeTorque: 500
   maxSpeed: 5
-  slopeSlideForce: 5
-  slopeLayer:
-    serializedVersion: 2
-    m_Bits: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -3921,7 +3917,7 @@ PrefabInstance:
     - target: {fileID: 3641537086074458893, guid: 6124a50e15dcc0c43815424fcf8ad1c9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.5
+      value: -2.336
       objectReference: {fileID: 0}
     - target: {fileID: 3641537086074458893, guid: 6124a50e15dcc0c43815424fcf8ad1c9,
         type: 3}
