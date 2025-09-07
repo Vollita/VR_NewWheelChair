@@ -3,7 +3,16 @@ guid: 6ef489891a976b640bd0d38255122911
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - carPrefab: {fileID: 3992886342122667758, guid: 4806752b455b8b0489cce6d287c65144,
+      type: 3}
+  - spawnPoint: {instanceID: 0}
+  - endPoint: {instanceID: 0}
+  - waypoint1: {instanceID: 0}
+  - waypoint2: {instanceID: 0}
+  - waypoint3: {instanceID: 0}
+  - waypoint4: {instanceID: 0}
+  - waypoint5: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
