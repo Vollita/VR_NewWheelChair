@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/NextScene.unity
     guid: fd7e2e17680753243bf273311c717ed7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/1.unity
     guid: c1b891576fb2f9a418ddd9b905d4c785
   - enabled: 0
@@ -38,9 +38,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/12.unity
     guid: d543e9445848cbe428bbe58bfbf28597
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/WheelChairTest.unity
     guid: d146b6e15b894d94c89b64fe59d91af2
+  - enabled: 1
+    path: Assets/Scenes/UI1.unity
+    guid: 3b0c2777581b10c4880d9915d0fa0856
+  - enabled: 0
+    path: Assets/Scenes/UI2.unity
+    guid: a14b604e8095a5e44b96339a2043b179
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 0a8b51ce7d4667949916fa11e0b9cf83,
       type: 2}

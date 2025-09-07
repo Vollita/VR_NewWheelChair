@@ -1271,10 +1271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872eb8b707a106c4ba40995b0b69fb90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceFromCamera: 1
+  distanceFromCamera: 2
   followCameraRotation: 1
-  offsetX: -0.6
-  offsetY: -0.25
+  offsetX: 0
+  offsetY: 0
 --- !u!65 &604956984
 BoxCollider:
   m_ObjectHideFlags: 0
