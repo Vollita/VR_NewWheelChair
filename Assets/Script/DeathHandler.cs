@@ -5,8 +5,8 @@ public class DeathHandler : MonoBehaviour
 {
     private bool isDead = false;
 
-    public GameObject deathUI;               // Inspector中挂死亡UI
-    public string[] deathTags = { "Car", "Door" }; // 可配置多个死亡触发Tag
+    public GameObject deathUI;               // Inspector涓寕姝讳骸UI
+    public string[] deathTags = { "Car", "Door" }; // 鍙厤缃涓浜¤Е鍙慣ag
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -36,13 +36,14 @@ public class DeathHandler : MonoBehaviour
         if (deathUI != null)
             deathUI.SetActive(true);
 
-        // 可加：冻结控制，禁用移动等逻辑
+        // 鍙姞锛氬喕缁撴帶鍒讹紝绂佺敤绉诲姩绛夐�昏緫
 
-        Invoke(nameof(RestartScene), 3f); // 3秒后重启
+        Invoke(nameof(RestartScene), 3f); // 3绉掑悗閲嶅惎
     }
 
     void RestartScene()
     {
+        isDead = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

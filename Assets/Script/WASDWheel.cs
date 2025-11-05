@@ -13,12 +13,12 @@ public class WASDWheel : MonoBehaviour
     public Transform meshR;
 
     [Header("Movement Settings")]
-    public float maxMotorTorque = 150f;   // 最大马达扭矩
-    public float brakeTorque = 500f;      // 制动力矩
-    public float maxSpeed = 5f;           // 最大速度限制
+    public float maxMotorTorque;   // 最大马达扭矩
+    public float brakeTorque;      // 制动力矩
+    public float maxSpeed;           // 最大速度限制
 
     [Header("Slope Settings")]
-    public float slopeSlideForce = 5f;    // 斜坡下滑力大小
+    public float slopeSlideForce;    // 斜坡下滑力大小
     public LayerMask slopeLayer;         // 斜坡层
 
     [Header("Ground Detection")]
@@ -28,6 +28,7 @@ public class WASDWheel : MonoBehaviour
     private float moveInput;
     private float turnInput;
     private Rigidbody rb;
+    [SerializeField]
     private bool isOnSlope = false;
     private Vector3 slopeNormal;
 
@@ -44,21 +45,21 @@ public class WASDWheel : MonoBehaviour
     {
         StartCoroutine(AlignToGround());
 
-        // 可选：提高轮子摩擦力（如果需要爬坡时加上）
-        var sidewaysFriction = wheelL.sidewaysFriction;
-        sidewaysFriction.extremumValue = 1.5f;
-        sidewaysFriction.asymptoteValue = 1.2f;
-        sidewaysFriction.stiffness = 2.5f;
+        //// 可选：提高轮子摩擦力（如果需要爬坡时加上）
+        //var sidewaysFriction = wheelL.sidewaysFriction;
+        //sidewaysFriction.extremumValue = 1.5f;
+        //sidewaysFriction.asymptoteValue = 1.2f;
+        //sidewaysFriction.stiffness = 2.5f;
 
-        var forwardFriction = wheelL.forwardFriction;
-        forwardFriction.extremumValue = 2.0f;
-        forwardFriction.asymptoteValue = 1.5f;
-        forwardFriction.stiffness = 3.0f;
+        //var forwardFriction = wheelL.forwardFriction;
+        //forwardFriction.extremumValue = 2.0f;
+        //forwardFriction.asymptoteValue = 1.5f;
+        //forwardFriction.stiffness = 3.0f;
 
-        wheelL.sidewaysFriction = sidewaysFriction;
-        wheelL.forwardFriction = forwardFriction;
-        wheelR.sidewaysFriction = sidewaysFriction;
-        wheelR.forwardFriction = forwardFriction;
+        //wheelL.sidewaysFriction = sidewaysFriction;
+        //wheelL.forwardFriction = forwardFriction;
+        //wheelR.sidewaysFriction = sidewaysFriction;
+        //wheelR.forwardFriction = forwardFriction;
     }
 
     void Update()
@@ -81,7 +82,7 @@ public class WASDWheel : MonoBehaviour
         // 如果在斜坡上且没有输入，施加下滑力
         if (isOnSlope && Mathf.Approximately(moveInput, 0f))
         {
-            ApplySlopeSlideForce();
+            //ApplySlopeSlideForce();
         }
     }
 

@@ -87,7 +87,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.5466504, y: 1.2457082, z: 0.5596702}
-  m_Center: {x: 0.66725767, y: 0.66852605, z: -0.71085227}
+  m_Center: {x: 0.66725767, y: 0.66, z: -0.71085227}
 --- !u!114 &356364880698682853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,18 +123,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 433300897609574230}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3a9b3c5fea2a0041ae086fad2717851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   wheelL: {fileID: 3239074346250721591}
   wheelR: {fileID: 3180459758334802280}
-  meshL: {fileID: 7993619209108137092}
-  meshR: {fileID: 1050057052405314724}
+  meshL: {fileID: 1050057052405314724}
+  meshR: {fileID: 7993619209108137092}
   maxMotorTorque: 600
   brakeTorque: 100
   maxSpeed: 4
+  slopeSlideForce: 5
+  slopeLayer:
+    serializedVersion: 2
+    m_Bits: 64
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -154,15 +158,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheelL: {fileID: 3239074346250721591}
   wheelR: {fileID: 3180459758334802280}
-  meshL: {fileID: 7993619209108137092}
-  meshR: {fileID: 1050057052405314724}
+  meshL: {fileID: 1050057052405314724}
+  meshR: {fileID: 7993619209108137092}
   maxMotorTorque: 300
   brakeTorque: 100
   maxSpeed: 2
   slopeSlideForce: 300
   slopeLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -564,7 +568,7 @@ GameObject:
   - component: {fileID: 7532604405501285006}
   - component: {fileID: 364998445478288948}
   m_Layer: 0
-  m_Name: Right_Wheel
+  m_Name: Left_Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1639,7 +1643,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5909164533325175199}
-  - component: {fileID: 5078257374203850541}
   m_Layer: 0
   m_Name: WheelCollider
   m_TagString: Untagged
@@ -1666,27 +1669,6 @@ Transform:
   - {fileID: 3826332002636463994}
   m_Father: {fileID: 4269087746913507167}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5078257374203850541
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6889163269713487393}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7127430298201510923
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,7 +2411,7 @@ GameObject:
   - component: {fileID: 8519021731055233398}
   - component: {fileID: 7442841091630613984}
   m_Layer: 0
-  m_Name: Left_Wheel
+  m_Name: Right_Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
