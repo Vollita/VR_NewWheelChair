@@ -6,10 +6,12 @@ public class PortalTrigger : MonoBehaviour
 {
     public string sceneToLoad;
     public string spawnPointName;
+    [SerializeField]
     private bool isLoading = false;
+    [SerializeField]
     private static bool isPlayerTeleporting = false;
 
-    void Start()
+    void OnEnable()
     {
         // 确保传送点cube设置为触发器
         Collider col = GetComponent<Collider>();
@@ -22,8 +24,8 @@ public class PortalTrigger : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // 防止重复触发和确保只有玩家能触发
-        if (isLoading || isPlayerTeleporting || !other.CompareTag("Player"))
-            return;
+        //if (isLoading || isPlayerTeleporting || !other.CompareTag("Player"))
+        //    return;
 
         // 确保场景名称和生成点名称都已设置
         if (string.IsNullOrEmpty(sceneToLoad) || string.IsNullOrEmpty(spawnPointName))

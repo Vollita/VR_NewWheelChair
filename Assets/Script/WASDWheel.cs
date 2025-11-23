@@ -69,7 +69,7 @@ public class WASDWheel : MonoBehaviour
         turnInput = Input.GetAxis("Horizontal");  // A/D for left/right
 
         // 检测是否在斜坡上
-        CheckSlope();
+        //CheckSlope();
     }
 
     void FixedUpdate()

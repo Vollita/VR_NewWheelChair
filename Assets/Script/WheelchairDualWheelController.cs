@@ -14,12 +14,12 @@ public class WheelchairDualWheelController : MonoBehaviour
     public Transform meshR;
 
     [Header("Movement Settings")]
-    public float maxMotorTorque = 150f;   // 最大马达扭矩
-    public float brakeTorque = 500f;      // 制动力矩
-    public float maxSpeed = 5f;           // 最大速度限制
+    public float maxMotorTorque;   // 最大马达扭矩
+    public float brakeTorque;      // 制动力矩
+    public float maxSpeed;           // 最大速度限制
 
     [Header("Slope Settings")]
-    public float slopeSlideForce = 5f;    // 斜坡下滑力大小
+    public float slopeSlideForce;    // 斜坡下滑力大小
     public LayerMask slopeLayer;         // 斜坡层
 
     [Header("Ground Detection")]
@@ -54,20 +54,20 @@ public class WheelchairDualWheelController : MonoBehaviour
         StartCoroutine(AlignToGround());
 
         // 提高轮胎摩擦力
-        var sidewaysFriction = wheelL.sidewaysFriction;
-        sidewaysFriction.extremumValue = 1.5f;
-        sidewaysFriction.asymptoteValue = 1.2f;
-        sidewaysFriction.stiffness = 2.5f;
+        //var sidewaysFriction = wheelL.sidewaysFriction;
+        //sidewaysFriction.extremumValue = 1.5f;
+        //sidewaysFriction.asymptoteValue = 1.2f;
+        //sidewaysFriction.stiffness = 2.5f;
 
-        var forwardFriction = wheelL.forwardFriction;
-        forwardFriction.extremumValue = 2.0f;
-        forwardFriction.asymptoteValue = 1.5f;
-        forwardFriction.stiffness = 3.0f;
+        //var forwardFriction = wheelL.forwardFriction;
+        //forwardFriction.extremumValue = 2.0f;
+        //forwardFriction.asymptoteValue = 1.5f;
+        //forwardFriction.stiffness = 3.0f;
 
-        wheelL.sidewaysFriction = sidewaysFriction;
-        wheelL.forwardFriction = forwardFriction;
-        wheelR.sidewaysFriction = sidewaysFriction;
-        wheelR.forwardFriction = forwardFriction;
+        //wheelL.sidewaysFriction = sidewaysFriction;
+        //wheelL.forwardFriction = forwardFriction;
+        //wheelR.sidewaysFriction = sidewaysFriction;
+        //wheelR.forwardFriction = forwardFriction;
     }
 
     void Update()
@@ -88,7 +88,7 @@ public class WheelchairDualWheelController : MonoBehaviour
         }
 
         // 检测斜坡
-        CheckSlope();
+        //CheckSlope();
     }
 
     void FixedUpdate()
@@ -99,10 +99,10 @@ public class WheelchairDualWheelController : MonoBehaviour
         ClampMaxSpeed();
 
         // 如果在斜坡上且没有输入，施加下滑力
-        if (isOnSlope && Mathf.Approximately(moveInput, 0f))
-        {
-            ApplySlopeSlideForce();
-        }
+        //if (isOnSlope && Mathf.Approximately(moveInput, 0f))
+        //{
+            //ApplySlopeSlideForce();
+        //}
     }
 
     private void CheckSlope()
@@ -122,10 +122,10 @@ public class WheelchairDualWheelController : MonoBehaviour
     private void ApplySlopeSlideForce()
     {
         // 计算斜坡方向（法线的垂直投影）
-        Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, slopeNormal).normalized;
+        //Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, slopeNormal).normalized;
 
         // 施加下滑力
-        rb.AddForce(slopeDirection * slopeSlideForce, ForceMode.Force);
+        //rb.AddForce(slopeDirection * slopeSlideForce, ForceMode.Force);
     }
 
     private void ApplyDifferentialDrive()
