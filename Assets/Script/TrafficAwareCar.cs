@@ -73,10 +73,10 @@ public class TrafficAwareCar : MonoBehaviour
             return 0f; // 红灯完全停止
         }
         // 检查黄灯
-        else if (IsYellowLight())
-        {
-            return normalSpeed * 0.5f; // 黄灯一半速度
-        }
+        //else if (IsYellowLight())
+        //{
+        //    return normalSpeed * 0.5f; // 黄灯一半速度
+        //}
         // 绿灯或其他情况
         else
         {
@@ -93,14 +93,14 @@ public class TrafficAwareCar : MonoBehaviour
                globalTrafficLight.redBox.material.name.Contains(globalTrafficLight.matRed.name);
     }
 
-    bool IsYellowLight()
-    {
-        return globalTrafficLight != null &&
-               globalTrafficLight.yellowBox != null &&
-               globalTrafficLight.matYellow != null &&
-               globalTrafficLight.yellowBox.material != null &&
-               globalTrafficLight.yellowBox.material.name.Contains(globalTrafficLight.matYellow.name);
-    }
+    //bool IsYellowLight()
+    //{
+    //    return globalTrafficLight != null &&
+    //           globalTrafficLight.yellowBox != null &&
+    //           globalTrafficLight.matYellow != null &&
+    //           globalTrafficLight.yellowBox.material != null &&
+    //           globalTrafficLight.yellowBox.material.name.Contains(globalTrafficLight.matYellow.name);
+    //}
 
     void UpdateRenderer()
     {
