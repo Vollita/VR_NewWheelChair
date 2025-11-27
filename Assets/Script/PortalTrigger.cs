@@ -81,7 +81,7 @@ public class PortalTrigger : MonoBehaviour
     {
         // 等待一帧，确保所有对象都已初始化
         yield return null;
-
+        Debug.Log("Lightmaps = " + LightmapSettings.lightmaps.Length);
         string spawnName = PlayerPrefs.GetString("SpawnPoint", "");
 
         Debug.Log($"场景加载完成，寻找生成点: {spawnName}");
