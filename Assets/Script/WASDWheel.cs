@@ -13,13 +13,16 @@ public class WASDWheel : MonoBehaviour
     public Transform meshR;
 
     [Header("Movement Settings")]
-    public float maxMotorTorque;   // 最大马达扭矩
-    public float brakeTorque;      // 制动力矩
-    public float maxSpeed;           // 最大速度限制
-
-    [Header("Slope Settings")]
-    public float slopeSlideForce;    // 斜坡下滑力大小
-    public LayerMask slopeLayer;         // 斜坡层
+    public float maxMotorTorque = 1500f;   // 增加默认值
+    public float brakeTorque = 1000f;      // 制动力矩
+    public float maxSpeed = 10f;           // 最大速度限制
+    public float turningMotorTorque = 800f;
+    
+    [Header("Slope Handling")]
+    public float slopeTorqueMultiplier = 2.5f;  // 坡道扭矩倍增
+    public float minSlopeAngle = 5f;            // 最小斜坡角度
+    public float maxSlopeAngle = 45f;           // 最大可攀爬角度
+    public float slopeDetectionDistance = 1.0f; // 斜坡检测距离
 
     [Header("Ground Detection")]
     public LayerMask groundLayer;
@@ -29,47 +32,33 @@ public class WASDWheel : MonoBehaviour
     private float turnInput;
     private Rigidbody rb;
     [SerializeField]
-    private bool isOnSlope = false;
-    private Vector3 slopeNormal;
+    private float currentSlopeAngle = 0f;
+    private Vector3 slopeNormal = Vector3.up;
+    private bool isGrounded = false;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        // 保留Y轴旋转，冻结X和Z旋转防止翻车
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.useGravity = false; // 初始禁用重力
-    }
-
-    void Start()
-    {
-        StartCoroutine(AlignToGround());
-
-        //// 可选：提高轮子摩擦力（如果需要爬坡时加上）
-        //var sidewaysFriction = wheelL.sidewaysFriction;
-        //sidewaysFriction.extremumValue = 1.5f;
-        //sidewaysFriction.asymptoteValue = 1.2f;
-        //sidewaysFriction.stiffness = 2.5f;
-
-        //var forwardFriction = wheelL.forwardFriction;
-        //forwardFriction.extremumValue = 2.0f;
-        //forwardFriction.asymptoteValue = 1.5f;
-        //forwardFriction.stiffness = 3.0f;
-
-        //wheelL.sidewaysFriction = sidewaysFriction;
-        //wheelL.forwardFriction = forwardFriction;
-        //wheelR.sidewaysFriction = sidewaysFriction;
-        //wheelR.forwardFriction = forwardFriction;
+        rb.useGravity = true; // 保持重力启用
     }
 
     void Update()
     {
-        // WASD控制
-        moveInput = Input.GetAxis("Vertical");    // W/S for forward/backward
-        turnInput = Input.GetAxis("Horizontal");  // A/D for left/right
-
-        // 检测是否在斜坡上
-        //CheckSlope();
+        moveInput = Input.GetAxis("Vertical");
+        turnInput = Input.GetAxis("Horizontal");
+        
+        // 更新接地状态
+        isGrounded = IsGrounded();
+        
+        // 检测斜坡角度
+        if (isGrounded)
+        {
+            DetectSlope();
+        }
     }
 
     void FixedUpdate()
@@ -78,61 +67,107 @@ public class WASDWheel : MonoBehaviour
         UpdateWheelVisual(wheelL, meshL);
         UpdateWheelVisual(wheelR, meshR);
         ClampMaxSpeed();
-
-        // 如果在斜坡上且没有输入，施加下滑力
-        if (isOnSlope && Mathf.Approximately(moveInput, 0f))
-        {
-            //ApplySlopeSlideForce();
-        }
+        ApplySlopeGravity(); // 应用斜坡重力补偿
     }
 
-    private void CheckSlope()
+    private void DetectSlope()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, groundRayLength, slopeLayer))
+        Vector3 rayOrigin = transform.position;
+        
+        // 向前方检测斜坡
+        if (Physics.Raycast(rayOrigin, transform.forward, out hit, slopeDetectionDistance, groundLayer))
         {
-            isOnSlope = true;
             slopeNormal = hit.normal;
+            currentSlopeAngle = Vector3.Angle(Vector3.up, slopeNormal);
+        }
+        // 向下方检测当前地面
+        else if (Physics.Raycast(rayOrigin + Vector3.up * 0.5f, Vector3.down, out hit, 1.0f, groundLayer))
+        {
+            slopeNormal = hit.normal;
+            currentSlopeAngle = Vector3.Angle(Vector3.up, slopeNormal);
         }
         else
         {
-            isOnSlope = false;
+            currentSlopeAngle = 0f;
+            slopeNormal = Vector3.up;
         }
-    }
-
-    private void ApplySlopeSlideForce()
-    {
-        // 计算斜坡方向（斜坡法线的垂直方向）
-        Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, slopeNormal).normalized;
-
-        // 施加下滑力
-        rb.AddForce(slopeDirection * slopeSlideForce, ForceMode.Force);
     }
 
     private void ApplyDifferentialDrive()
     {
-        // ✅ 修复转向方向：向左推动手柄会左转
-        float leftTorque = (moveInput + turnInput) * maxMotorTorque;
-        float rightTorque = (moveInput - turnInput) * maxMotorTorque;
+        float slopeMultiplier = 1f;
+        
+        // 在斜坡上时增加扭矩
+        if (currentSlopeAngle > minSlopeAngle && currentSlopeAngle <= maxSlopeAngle)
+        {
+            // 计算前进方向与斜坡法线的夹角，判断是上坡还是下坡
+            float forwardDot = Vector3.Dot(transform.forward, slopeNormal);
+            if (forwardDot < -0.1f && moveInput > 0.1f) // 上坡且向前行驶
+            {
+                slopeMultiplier = slopeTorqueMultiplier * (currentSlopeAngle / maxSlopeAngle);
+            }
+        }
+
+        float leftTorque = (moveInput + turnInput) * turningMotorTorque * slopeMultiplier;
+        float rightTorque = (moveInput - turnInput) * turningMotorTorque * slopeMultiplier;
+
+        // 限制扭矩在合理范围内
+        leftTorque = Mathf.Clamp(leftTorque, -maxMotorTorque, maxMotorTorque);
+        rightTorque = Mathf.Clamp(rightTorque, -maxMotorTorque, maxMotorTorque);
 
         wheelL.motorTorque = leftTorque;
         wheelR.motorTorque = rightTorque;
 
-        bool isIdle = Mathf.Approximately(moveInput, 0f) && Mathf.Approximately(turnInput, 0f);
-        float currentBrake = isIdle ? (isOnSlope ? 0f : brakeTorque) : 0f; // 在斜坡上时不刹车
+        // 优化刹车逻辑
+        bool isIdle = Mathf.Abs(moveInput) < 0.1f && Mathf.Abs(turnInput) < 0.1f;
+        
+        if (isIdle)
+        {
+            // 在斜坡上时，根据坡度调整刹车
+            if (currentSlopeAngle > minSlopeAngle)
+            {
+                // 计算斜坡上的重力分量
+                float gravityForce = Mathf.Sin(currentSlopeAngle * Mathf.Deg2Rad) * rb.mass * Physics.gravity.magnitude;
+                float requiredBrake = gravityForce * 0.5f; // 使用部分刹车力保持稳定
+                
+                wheelL.brakeTorque = Mathf.Min(requiredBrake, brakeTorque);
+                wheelR.brakeTorque = Mathf.Min(requiredBrake, brakeTorque);
+            }
+            else
+            {
+                wheelL.brakeTorque = brakeTorque;
+                wheelR.brakeTorque = brakeTorque;
+            }
+        }
+        else
+        {
+            // 行驶时释放刹车
+            wheelL.brakeTorque = 0f;
+            wheelR.brakeTorque = 0f;
+        }
+    }
 
-        wheelL.brakeTorque = currentBrake;
-        wheelR.brakeTorque = currentBrake;
+    private void ApplySlopeGravity()
+    {
+        if (!isGrounded || currentSlopeAngle < minSlopeAngle) return;
+        
+        // 计算斜坡方向的重力分量
+        Vector3 gravityForce = Physics.gravity * rb.mass;
+        Vector3 slopeDirection = Vector3.ProjectOnPlane(gravityForce, slopeNormal).normalized;
+        
+        // 在斜坡上施加额外的力，帮助滑下或稳定
+        float slopeFactor = Mathf.Sin(currentSlopeAngle * Mathf.Deg2Rad);
+        Vector3 slopeForce = slopeDirection * slopeFactor * rb.mass * 2f;
+        
+        rb.AddForce(slopeForce, ForceMode.Force);
     }
 
     private void UpdateWheelVisual(WheelCollider col, Transform mesh)
     {
-        if (mesh == null)
-            return;
+        if (mesh == null) return;
 
-        Vector3 pos;
-        Quaternion rot;
-        col.GetWorldPose(out pos, out rot);
+        col.GetWorldPose(out Vector3 pos, out Quaternion rot);
         mesh.position = pos;
         mesh.rotation = rot;
     }
@@ -147,24 +182,21 @@ public class WASDWheel : MonoBehaviour
         }
     }
 
-    private IEnumerator AlignToGround()
-    {
-        yield return null; // 等一帧让场景初始化
-
-        RaycastHit hit;
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
-
-        if (Physics.Raycast(origin, Vector3.down, out hit, 5f, groundLayer))
-        {
-            transform.position = hit.point + Vector3.up * 0.1f;
-        }
-
-        yield return new WaitForSeconds(0.05f); // 稍微等几帧确保碰撞稳定
-        rb.useGravity = true; // 启用重力
-    }
-
     public bool IsGrounded()
     {
-        return Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, groundRayLength, groundLayer);
+        return Physics.Raycast(transform.position + Vector3.up * 0.1f, 
+                              Vector3.down, groundRayLength, groundLayer);
+    }
+
+    // 调试显示
+    void OnDrawGizmosSelected()
+    {
+        // 绘制斜坡检测线
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(transform.position, transform.forward * slopeDetectionDistance);
+        
+        // 绘制地面检测线
+        Gizmos.color = isGrounded ? Color.green : Color.red;
+        Gizmos.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down * groundRayLength);
     }
 }
