@@ -3561,12 +3561,12 @@ PrefabInstance:
     - target: {fileID: 64655282965998414, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 166711085639412853, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2438843305049341723, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
@@ -3621,7 +3621,7 @@ PrefabInstance:
     - target: {fileID: 5202588337657788156, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8466757543572883092, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
@@ -3631,7 +3631,7 @@ PrefabInstance:
     - target: {fileID: 8535476665178471971, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8758585479502962125, guid: 0bdca3b77890a2c4987ca7897358e3e1,
         type: 3}
@@ -4121,7 +4121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b8f086094533084787b5b8eb88916d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: 11
+  sceneToLoad: Start
   spawnPointName: Cube (6)
   isLoading: 0
 --- !u!65 &1355212038
